@@ -1,30 +1,90 @@
 import pygame
 from pygame.draw import *
-from consts import *
+
+def draw_house( x, y, w, h): 
+	'''
+	x, y - the base points are the upper left corner of the house
+	w - width of the house
+	h - height of the house
+	'''
+	#house
+	polygon(screen, (22, 20, 0), ([x,y+h] , [x+w, y+h ], [x+w, y], [x, y]))
+
+	# windows
+	polygon(screen, (139, 0, 0), ([x+(w//8),y+4*(h//6)] , [x+2*(w//8), y+4*(h//6) ], [x+2*(w//8), y+5*(h//6)], [x+(w//8), y+5*(h//6)]))
+	polygon(screen, (139, 0, 0), ([x+3*(w//8),y+4*(h//6)] , [x+4*(w//8), y+4*(h//6) ], [x+4*(w//8), y+5*(h//6)], [x+3*(w//8), y+5*(h//6)]))
+	polygon(screen, (255, 255, 0), ([x+5*(w//8),y+4*(h//6)] , [x+6*(w//8), y+4*(h//6) ], [x+6*(w//8), y+5*(h//6)], [x+5*(w//8), y+5*(h//6)]))
+
+
+
+	
+	#
+	polygon(screen, (128, 128, 128), ([x+(w//5),y] , [x+2*(w//5), y ], [x+2*(w//5), y + (h//2)], [x+(w//5), y + (h//2)]))
+	polygon(screen, (128, 128, 128), ([x+3*(w//5),y] , [x+4*(w//5), y ], [x+4*(w//5),  y + (h//2)], [x+3*(w//5),  y + (h//2)]))
+	
+	# chimney
+	polygon(screen, (36, 34, 14), ([x+(w//6),y] , [x+2*(w//6), y ], [x+2*(w//6), y - h//4], [x+(w//6), y - h//4]))
+	polygon(screen, (36, 34, 14), ([x+3*(w//6),y] , [x+4*(w//6), y ], [x+4*(w//6), y - h//6], [x+3*(w//6), y - h//6]))
+	# roof
+	polygon(screen, (0, 30, 0), ([x-(w//8),y] , [x+w+(w//8), y ], [x+w, y -(h//8)], [x, y - (h//8)]))
+	#balcony 
+	polygon(screen, (0, 31, 27), ([x-(w//8),y + (h//2)] , [x+w+(w//8), y + (h//2) ], [x+w+(w//8), y + (h//2)+(h//10) ], [x-(w//8),y + (h//2)+(h//10)]))
+	# fence
+	polygon(screen, (0, 31, 27), ( [x-(w//8),y + (h//2)] , [x+(w//25), y + (h//2) ], [x+(w//25), y + (h//2)-(h//10)], [x-(w//8), y + (h//2)-(h//10)]))
+	polygon(screen, (0, 31, 27), ([x+w+(w//8) - (h//10),y + (h//2)] , [x+w+(w//8), y + (h//2) ], [x+w+(w//8), y + (h//2)-(h//10)], [x+w+(w//8) - (h//10), y + (h//2)-(h//10)]))
+
+	i=1
+	while i < 11:
+		polygon(screen, (0, 31, 27), ([x+i*(w//10),y + (h//2)] , [x+(i+1)*(w//10), y + (h//2) ], [x+(i+1)*(w//10),  y + (h//2)-(h//10)], [x+i*(w//10),  y + (h//2)-(h//10)]))
+		i+=2
+	polygon(screen, (0, 31, 27), ([x-(w//8),y + (h//2)-(h//10)] , [x+w+(w//8), y + (h//2)-(h//10) ], [x+w+(w//8), y + (h//2)-(h//9)], [x-(w//8), y + (h//2)-(h//9)]))
+
+def draw_clouds_1(x, y, h, w) :
+	ellipse(screen, (40, 40, 40), (x, y, h, w))
+
+def draw_clouds_3(x, y, h, w) :
+	ellipse(screen, (60, 60, 60), (x, y, h, w))
+
+
+def ghost_1(x, y , r, h):
+	circle(screen, (255, 255, 255), (x, y), r )
+	polygon(screen, (255, 255, 255), ([x+r,y] ,[x+r*1.2,y+h],[x-r*1.2, y+h],[x-r, y] ))
+	for i in range (6):
+		R = int(r//(2.5))
+		circle(screen, (255, 255, 255), ((x-r)+ R*i, y+h), R)
+	for i in range (6):
+		R = int(r//(2.5))
+		circle(screen, (0, 0, 0), ((x-r)+ R*i, y+h+R), R)  
+	#eyes
+	ellipse(screen,(0, 191, 255), (x-0.5*r , y-0.5*r , r*0.25, r*0.5))
+	ellipse(screen,(0, 191, 255), (x+0.25*r , y-0.5*r , r*0.25, r*0.5))
+	ellipse (screen, (0, 0, 0), (x-0.50*r , y-0.3*r , r*0.25, r*0.25) )
+	ellipse (screen, (0, 0, 0), (x+0.25*r , y-0.3*r , r*0.25, r*0.25) )
+
+
+
 
 pygame.init()
 
 FPS = 30
+#create screens
 screen = pygame.display.set_mode((400, 400))
-screen.fill(WHITE)
+screen.fill((255, 255, 255))
 
 
-
-# фон
+# background
 polygon(screen, (0, 0, 0), ([0,150] , [400, 150 ], [400, 400], [0, 400]))
-polygon(screen, (255, 255, 255), ([0,0] , [0, 150 ], [400, 150], [0, 0]))
+polygon(screen, (105, 105, 105), ([0,0] , [0, 150 ], [400, 150], [400, 0]))
 
-#house
-polygon(screen, (250, 0, 0), ([50,350] , [200, 350 ], [200, 100], [50, 100]))
+# moon
+circle (screen, (255, 255, 255), ( 350, 50), 20)
 
-# окна
-polygon(screen, (0, 0, 0), ([75,280] , [95, 280 ], [95, 330], [75, 330]))
-polygon(screen, (0, 0, 0), ([140,280] , [160, 280 ], [160, 330], [140, 330]))
-polygon(screen, (0, 0, 0), ([105,280] , [125, 280 ], [125, 330], [105, 330]))
+draw_house(30,100,200,200)
 
+draw_clouds_3(200, 50, 140, 40)
 
-# луна
-circle (screen, (255, 255, 0), ( 350, 50), 45)
+ghost_1(300, 150, 30, 20 )
+ghost_1(300, 350, 30, 20 )
 
 
 
