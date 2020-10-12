@@ -18,7 +18,6 @@ polygon(screen, (0, 0, 0), ([150,250] , [250 ,250 ], [250, 270 ], [150, 270]))
 
 
 
-
 pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
