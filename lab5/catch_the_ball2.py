@@ -18,10 +18,10 @@ COLOR = 3
 VX = 4
 VY = 5
 WIDTH = 1200
-HEIGHT= 1200
+HEIGHT= 800
 
 FPS = 20
-screen = pygame.display.set_mode((HEIGHT, WIDTH))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 number = 1000
 balls = [0]*number
@@ -49,16 +49,30 @@ def new_ball():
 	return ball
 
 def move_ball(ball):
-	
+	r = ball[R]
 	x = ball[X] 
 	y = ball[Y] 
 	vx = ball[VX]
 	vy = ball[VY]
 	x += vx
 	y += vy
+	if x + r > WIDTH or x - r < 0:
+		vx = -vx
+		x += vx
+		y += vy
+	if y + r > HEIGHT or y - r < 0:
+		vy = -vy
+		x += vx
+		y += vy
+	else:
+		x += vx
+		y += vy
 
 	ball[X] = x
 	ball[Y] = y
+	ball[VX] = vx
+	ball[VY] = vy	
+
 
 	return ball
 	
