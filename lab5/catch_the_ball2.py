@@ -23,7 +23,7 @@ HEIGHT= 500
 FPS = 20
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 t = 0
-number = 10
+number = 100
 balls = [0]*number
 def draw(ball):
 	circle(screen,ball[COLOR],(ball[X],ball[Y]),ball[R])
@@ -90,12 +90,13 @@ while not finished:
 		if event.type == pygame.QUIT:
 			finished = True
 		elif event.type == pygame.MOUSEBUTTONDOWN:
-			for ball in balls: 
+			for i,ball in enumerate(balls): 
 				x1, y1 = event.pos
 				x = ball[X]
 				y = ball[Y]
 				r = ball[R]
 				if (x- x1)**2 + (y - y1)**2 <= r**2:
+					balls[i] = new_ball()
 					t += 1
 					print(t)
 						
