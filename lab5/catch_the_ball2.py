@@ -18,12 +18,12 @@ COLOR = 3
 VX = 4
 VY = 5
 WIDTH = 1200
-HEIGHT= 800
+HEIGHT= 500
 
 FPS = 20
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-number = 1000
+t = 0
+number = 10
 balls = [0]*number
 def draw(ball):
 	circle(screen,ball[COLOR],(ball[X],ball[Y]),ball[R])
@@ -32,11 +32,11 @@ def draw(ball):
 def new_ball():
 	'''рисует новый шарик '''
 
-	x = randint(100, 1100)
-	y = randint(100, 900)
+	x = randint(10, WIDTH-50)
+	y = randint(10, HEIGHT-50)
 	vx = randint(-10, 10)
 	vy = randint(-10, 10)
-	r = randint(10, 100)
+	r = randint(10, 50)
 	color = COLORS[randint(0, 5)]
 	circle(screen, color, (x, y), r)
 	ball = [0]*6
@@ -83,16 +83,23 @@ for i, ball in enumerate(balls):
 pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
-
+print('Очки: ')
 while not finished:
 	clock.tick(FPS)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			finished = True
 		elif event.type == pygame.MOUSEBUTTONDOWN:
-				for i, ball in enumerate(balls):
-					balls[i] = new_ball()
-				print('Click!')
+			for ball in balls: 
+				x1, y1 = event.pos
+				x = ball[X]
+				y = ball[Y]
+				r = ball[R]
+				if (x- x1)**2 + (y - y1)**2 <= r**2:
+					t += 1
+					print(t)
+						
+
 	
 	for ball in balls:
 		ball = move_ball(ball)
