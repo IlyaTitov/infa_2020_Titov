@@ -3,7 +3,7 @@ from pygame.draw import *
 from random import randint
 pygame.init()
 
-FPS = 2
+FPS = 1
 screen = pygame.display.set_mode((1200, 900))
 
 RED = (255, 0, 0)
@@ -44,6 +44,14 @@ def new_ball():
     ball[COLOR] = color
     return ball
 
+def move_ball(ball):
+    ball[X] += ball[VX]
+    ball[Y] += ball[VY] 
+
+for i, ball in enumerate(balls):
+    balls[i] = new_ball()
+                
+
 pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
@@ -54,11 +62,12 @@ while not finished:
         if event.type == pygame.QUIT:
             finished = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
-                for ball in balls:
-                    ball = new_ball()
+                for i, ball in enumerate(balls):
+                    balls[i] = new_ball()
                 print('Click!')
     
-
+    for ball in balls:
+        move_ball(ball)
 
 
     pygame.display.update()
