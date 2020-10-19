@@ -149,6 +149,7 @@ for k in range (player):
 	# счетчики очков
 	t = 0
 	j = 0
+	time = 0
 	print ('Ваше имя')
 	name.append(input())
 
@@ -162,13 +163,13 @@ for k in range (player):
 
 	pygame.display.update()
 	clock = pygame.time.Clock()
-	finished = False
 	print('Очки: ')
-	while not finished:
+	while time < 100:
+		time += 1
 		clock.tick(FPS)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				finished = True
+				time = 30
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 
 				for i,ball in enumerate(balls): 
