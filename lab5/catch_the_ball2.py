@@ -32,9 +32,7 @@ HEIGHT= 500
 
 FPS = 20
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-# счетчики очков
-t = 0
-j = 0
+
 number = 10
 balls = [0]*number
 number_rec = 5
@@ -138,61 +136,76 @@ def move_ball(ball):
 	ball[Y] = y
 	ball[VX] = vx
 	ball[VY] = vy	
-
-
 	return ball
 
-	
-for i, ball in enumerate(balls):
-	balls[i] = new_ball()
 
-for i, rect in enumerate(rects):
-	rects[i] = new_rect()
-				
 
-pygame.display.update()
-clock = pygame.time.Clock()
-finished = False
-print('Очки: ')
-while not finished:
-	clock.tick(FPS)
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			finished = True
-		elif event.type == pygame.MOUSEBUTTONDOWN:
+print('Здравствуйте. Введите число играков')
+player = int(input())
+out = open('result.txt' , 'w')
+name = [0]
+k = 0
+for k in range (player):
+	# счетчики очков
+	t = 0
+	j = 0
+	print ('Ваше имя')
+	name.append(input())
 
-			for i,ball in enumerate(balls): 
-				x1, y1 = event.pos
-				x = ball[X]
-				y = ball[Y]
-				r = ball[R]
-				if (x- x1)**2 + (y - y1)**2 <= r**2:
-					balls[i] = new_ball()
-					t += 1
-					print(t , ' ', j)
 
-			for i, rect in enumerate(rects):
-				x3, y3 = event.pos
-				x1 = rect[X1]
-				y1 = rect[Y1]
-				x2 = rect[X2]
-				y2 = rect[Y2]
-				if  x3  < x2 + x1 and y3  < y2 + y1  and x3 > x1 and y3 > y1:
-					rects[i] = new_rect()
-					if x1 < 30 : j += 20
-					else: j += 10
-					print(t , ' ', j)
+	for i, ball in enumerate(balls):
+		balls[i] = new_ball()
 
-	
-	for ball in balls:
-		ball = move_ball(ball)
-		draw(ball)
-		
-	for rect in rects	:	
-		rect = move_rect(rect)
-		draw_rect(rect)	
+	for i, rect in enumerate(rects):
+		rects[i] = new_rect()
+					
 
 	pygame.display.update()
-	screen.fill(BLACK)
+	clock = pygame.time.Clock()
+	finished = False
+	print('Очки: ')
+	while not finished:
+		clock.tick(FPS)
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				finished = True
+			elif event.type == pygame.MOUSEBUTTONDOWN:
 
+				for i,ball in enumerate(balls): 
+					x1, y1 = event.pos
+					x = ball[X]
+					y = ball[Y]
+					r = ball[R]
+					if (x- x1)**2 + (y - y1)**2 <= r**2:
+						balls[i] = new_ball()
+						t += 1
+						print(t , ' ', j)
+
+				for i, rect in enumerate(rects):
+					x3, y3 = event.pos
+					x1 = rect[X1]
+					y1 = rect[Y1]
+					x2 = rect[X2]
+					y2 = rect[Y2]
+					if  x3  < x2 + x1 and y3  < y2 + y1  and x3 > x1 and y3 > y1:
+						rects[i] = new_rect()
+						if x1 < 30 : j += 20
+						else: j += 10
+						print(t , ' ', j)
+
+		
+		for ball in balls:
+			ball = move_ball(ball)
+			draw(ball)
+			
+		for rect in rects	:	
+			rect = move_rect(rect)
+			draw_rect(rect)	
+
+		pygame.display.update()
+		screen.fill(BLACK)
+	print ('Результаты', name[k],' :',t, j,' Сумма очков :', j+t, file = out)
+	
+
+out.close()
 pygame.quit()
