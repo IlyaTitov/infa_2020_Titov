@@ -11,20 +11,86 @@ MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
+# constant for circle
 X = 0
 Y = 1
 R = 2
 COLOR = 3
 VX = 4
 VY = 5
+# constant for rect
+X1 = 0
+Y1 = 1
+X2 = 2
+Y2 = 3
+DX = 4
+DY = 5
+g = 5
+
 WIDTH = 1200
 HEIGHT= 500
 
 FPS = 20
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+# счетчики очков
 t = 0
-number = 100
+j = 0
+number = 10
 balls = [0]*number
+number_rec = 5
+rects = [0] *number_rec
+
+def new_rect():
+	rect = [0]*6
+	rect[X1] = randint(0, WIDTH) 
+	rect[Y1] = randint (0, HEIGHT)
+	rect[X2] = randint(10, 50) 
+	rect[Y2] =randint (10, 50)
+	rect[DX] = randint (0, 20)
+	rect[DY] = randint (0, 20)
+	return rect
+def move_rect(rect):
+	x = rect[X1]
+	y = rect[Y1]
+	x1 = rect[X2]
+	y1 = rect[Y2]
+	dx = rect[DX]
+	dy = rect[DY]
+
+	if x < 0 or x  > WIDTH :
+		dx = -dx
+		dy = randint(-20,20)
+		x +=dx
+		y +=dy 
+
+		
+	if y < 0 or y  > HEIGHT :
+		dy = -dy 
+		dx = randint(-20,20)
+		x +=dx
+		y +=dy 
+		
+	dy += g	
+	x +=dx
+	y +=dy
+	
+	rect[X1] = x 
+	rect[Y1] = y
+	rect[X2] = x1
+	rect[Y2] = y1
+	rect[DX] = dx
+	rect[DY] = dy
+
+
+	return rect
+
+def draw_rect(rect):
+	x = rect[X1]
+	y = rect[Y1]
+	x1 = rect[X2]
+	y1 = rect[Y2]
+	pygame.draw.rect(screen, (255, 255, 255), (x, y, x1, y1 ))
+
 def draw(ball):
 	circle(screen,ball[COLOR],(ball[X],ball[Y]),ball[R])
 
@@ -75,9 +141,13 @@ def move_ball(ball):
 
 
 	return ball
+
 	
 for i, ball in enumerate(balls):
 	balls[i] = new_ball()
+
+for i, rect in enumerate(rects):
+	rects[i] = new_rect()
 				
 
 pygame.display.update()
@@ -90,6 +160,7 @@ while not finished:
 		if event.type == pygame.QUIT:
 			finished = True
 		elif event.type == pygame.MOUSEBUTTONDOWN:
+
 			for i,ball in enumerate(balls): 
 				x1, y1 = event.pos
 				x = ball[X]
@@ -98,14 +169,28 @@ while not finished:
 				if (x- x1)**2 + (y - y1)**2 <= r**2:
 					balls[i] = new_ball()
 					t += 1
-					print(t)
-						
+					print(t , ' ', j)
+
+			for i, rect in enumerate(rects):
+				x3, y3 = event.pos
+				x1 = rect[X1]
+				y1 = rect[Y1]
+				x2 = rect[X2]
+				y2 = rect[Y2]
+				if  x3  < x2 + x1 and y3  < y2 + y1  and x3 > x1 and y3 > y1:
+					rects[i] = new_rect()
+					if x1 < 30 : j += 20
+					else: j += 10
+					print(t , ' ', j)
 
 	
 	for ball in balls:
 		ball = move_ball(ball)
 		draw(ball)
-
+		
+	for rect in rects	:	
+		rect = move_rect(rect)
+		draw_rect(rect)	
 
 	pygame.display.update()
 	screen.fill(BLACK)
