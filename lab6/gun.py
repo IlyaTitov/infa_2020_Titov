@@ -63,8 +63,8 @@ class ball():
             self.y -= self.vy
             self.set_coords()
 
-        if self.y > HEIGHT or self.y < 20:
-            self.vy = -  0.9* self.vy
+        if self.y > HEIGHT- 70 or self.y < 20:
+            self.vy = -  self.vy
             self.x += self.vx
             self.y -= self.vy
             self.set_coords()
@@ -86,7 +86,8 @@ class ball():
             Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
         """
         # FIXME
-        if ((obj.x - self.x) *2  + (obj.y - self.y)*2 <= (self.r + obj.r) * 2):
+        #if ((obj.x - self.x) *2  + (obj.y - self.y)*2 <= (self.r + obj.r) * 2):
+        if ((obj.x - self.x) **2  + (obj.y - self.y)**2 <= (self.r + obj.r) ** 2):
             return True
         else:
             return False
