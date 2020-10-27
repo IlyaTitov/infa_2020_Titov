@@ -3,7 +3,7 @@ import tkinter as tk
 import math
 import time
 
-# print (dir(math))
+
 WIDTH = 800
 HEIGHT = 600
 root = tk.Tk()
@@ -34,7 +34,7 @@ class ball():
                 self.y + self.r,
                 fill=self.color
         )
-        self.live = 100
+        self.live = 100 # шарик показывается пока live > 0
 
     def set_coords(self):
         canv.coords(
@@ -49,10 +49,10 @@ class ball():
         """Переместить мяч по прошествии единицы времени.
         Метод описывает перемещение мяча за один кадр перерисовки. То есть, обновляет значения
         self.x и self.y с учетом скоростей self.vx и self.vy, силы гравитации, действующей на мяч,
-        и стен по краям окна (размер окна 800х600).
+        и стен по краям окна (размер окна WIDTHхHEIGHT).
         """
 
-        self.live -= 1
+        self.live -= 1 # жизнь шарика убывается при каждом кадре 
         self.vy -= self.g
 
         if self.x > WIDTH or self.x < 0 :
@@ -82,8 +82,7 @@ class ball():
         Returns:
             Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
         """
-        # FIXME
-        #if ((obj.x - self.x) *2  + (obj.y - self.y)*2 <= (self.r + obj.r) * 2):
+        
         if ((obj.x - self.x) **2  + (obj.y - self.y)**2 <= (self.r + obj.r) ** 2):
             return True
         else:
@@ -95,7 +94,7 @@ class gun():
         self.f2_power = 10
         self.f2_on = 0
         self.an = 1
-        self.id = canv.create_line(20,450,50,420,width=7) # FIXME: don't know how to set it...
+        self.id = canv.create_line(20,450,50,420,width=7) 
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -112,7 +111,7 @@ class gun():
         self.an = math.atan((event.y-new_ball.y) / (event.x-new_ball.x))
         new_ball.vx = self.f2_power * math.cos(self.an)
         new_ball.vy = - self.f2_power * math.sin(self.an)
-        balls += [new_ball]
+        balls += [new_ball] # создаются список шариков 
         self.f2_on = 0
         self.f2_power = 10
 
@@ -141,17 +140,16 @@ class gun():
 class target():
     def __init__(self):
         self.points = 0
-        self.live = 1
+        self.live = 1 # цель отображается на экране пока live > 0
         self.vx = 0
-        # FIXME: don't work!!! How to call this functions when object is created?
         self.id = canv.create_oval(0,0,0,0)
-        self.id_points = canv.create_text(30,30,text = self.points,font = '28')
+        self.id_points = canv.create_text(30,30,text = self.points,font = '28') # показывает сколько в эту цель попали 
         self.new_target()
 
     def new_target(self):
         """ Инициализация новой цели. """
-        x = self.x = rnd(600, 780)
-        y = self.y = rnd(300, 550)
+        x = self.x = rnd(10, 700)
+        y = self.y = rnd(10, 550)
         r = self.r = rnd(2, 50)
         vx = self.vx = rnd(10, 20)
         vy = self.vy = rnd(10, 20)
@@ -169,7 +167,7 @@ class target():
         """
 
 
-        if self.x > WIDTH or self.x < 0 :
+        if self.x + self.r > WIDTH or self.x - self.r < 0 :
             self.vx = -  self.vx
             self.x += self.vx
             self.set_coords()
@@ -213,7 +211,7 @@ class target2():
         self.points = 0
         self.live = 1
            
-        # FIXME: don't work!!! How to call this functions when object is created?
+      
         self.id = canv.create_oval(0,0,0,0)
         self.id_points = canv.create_text(100,30,text = self.points,font = '28')# создает вверхнем левом углу счет побитых целей
         self.new_target()
