@@ -218,8 +218,8 @@ class target2():
 
     def new_target(self):
         """ Инициализация новой цели. """
-        x = self.x = rnd(600, 780)
-        y = self.y = rnd(300, 550)
+        x = self.x = rnd(100, 300)
+        y = self.y = rnd(300, 400)
         r = self.r = rnd(2, 50)
         vx = self.vx = rnd(10, 20)
         vy = self.vy = rnd(10, 20)
