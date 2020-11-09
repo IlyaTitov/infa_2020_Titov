@@ -87,6 +87,14 @@ class ball():
             return True
         else:
             return False
+    def hit_rectangle(self, obj):
+        """  проверяет сталкивание с прямоугольником """
+
+    
+        if (obj.y1 > self.y)  and  (obj.x > self.x) and obj.x1 < self.x:
+            return True
+        else:
+            return False
 
 
 class gun():
@@ -210,7 +218,7 @@ class Bomb():
 
         self.new_bomb()
     def new_bomb(self ):
-        self.x = rnd(10, 200)
+        self.x = rnd(10, 500)
         self.y = rnd(10, 200)
         self.id = canv.create_rectangle(self.x, self.y, self.x+10, self.y+15, fill= 'black')
 
@@ -283,8 +291,9 @@ class Rectangle:
     
 
 
-number_of_target = 4
+number_of_target = 1
 number_of_rectangle = 1
+number_of_bomb = 5
 screen1 = canv.create_text(400, 300, text='', font='28')
 g1 = gun()
 
@@ -300,11 +309,11 @@ def new_game(event=''):
     life = number_of_target
     bombs = []*number_of_rectangle
 
-    for i in range(number_of_rectangle):
+    for i in range(number_of_bomb):
 
         bomb = Bomb()
         bombs += [bomb]
-        print('gh')
+      
 
 
 # создаем цели
@@ -332,6 +341,7 @@ def new_game(event=''):
 
             bombs[i].move()    
         for b in balls:
+            
             b.move()
             for j in range(len(rectangles)):
                 for i in range(len(targets)):
@@ -340,7 +350,9 @@ def new_game(event=''):
                         targets[i].hit()
                         targets[i].delete()
               
-                           
+                    if b.hit_rectangle(rectangles[j]):
+                        rectangles[j].live = 0
+                        rectangles[j].delete()
 
                         
                        
@@ -361,6 +373,7 @@ def new_game(event=''):
         for i in range(number_of_target):
             if targets[i].live > 0 :
                 targets[i].move()
+                life += targets[i].live
                 
         for i in range(len(bombs)):
             bombs[i].move()
@@ -370,6 +383,7 @@ def new_game(event=''):
         for i in range(len(rectangles)):
             if rectangles[i].live > 0 :
                 rectangles[i].move()
+                life += rectangles[i].live 
                 #if rectangles[i].x1 == 100 :
                     #bomb = Bomb()
                     #bombs += [bomb]
@@ -378,8 +392,8 @@ def new_game(event=''):
 
 
 
-        for i in range(number_of_target):
-           life += targets[i].live
+        #for i in range(number_of_target):
+         #  life += targets[i].live
         balls = [ball for ball in balls if ball is not None]
         
         canv.update()
