@@ -205,15 +205,58 @@ class target():
         canv.coords(self.id, -10, -10, -10, -10)
 
 
+class Rectangle:
+    def __init__(self):
+
+        self.live = 1
+        self.new_rectangle()
+
+
+
+    def new_rectangle(self):
+        x = self.x = rnd(50, 500)
+        y = self.y = rnd (10, 100)
+        x1 = self.x1 = rnd(10, 500)
+        y1 = self.y1 = rnd (10, 100)
+        self.vx = rnd(-10, 10)
+        self.id = canv.create_rectangle(x, y, x1, y1, fill = 'black')
+
+
+    def move(self):
+        if self.x > WIDTH or self.x1 > WIDTH :
+            self.vx = -self.vx
+            self.x += self.vx
+            self.x1 += 0.9 * self.vx
+            self.set_coords()
+
+
+        if  self.x < 10 or self.x1 < 10 :
+            self.vx = -self.vx
+            self.x += self.vx
+            self.x1 += 0.9 * self.vx
+            self.set_coords()
+        else :
+            self.x += self.vx
+            self.x1 += 0.9 * self.vx
+            self.set_coords()
+
+    def set_coords(self):
+        canv.coords(self.id, self.x, self.y, self.x1, self.y1)
+
+    def hit(self):
+        canv.coords(self.id, -10, -10, -10, -10)
+    def delete(self):
+        canv.coords(self.id, -10, -5, -10, -5)
+
 
 
 number_of_target = 4
-
+number_of_rectangle = 3
 screen1 = canv.create_text(400, 300, text='', font='28')
 g1 = gun()
 
 targets = [0]*number_of_target
-
+rectangles = [0]* number_of_rectangle
 
 
 def new_game(event=''):
@@ -225,6 +268,9 @@ def new_game(event=''):
     for i in range(number_of_target):
         targets[i] = target() 
         targets[i].live = 1
+    for i in range(number_of_rectangle):
+        rectangles[i] = Rectangle()
+        rectangles[i].live = 1 
         
     canv.itemconfig(screen1, text='')
    
@@ -240,20 +286,21 @@ def new_game(event=''):
         life = 0
         for b in balls:
             b.move()
-            for i in range(number_of_target):
-                if b.hittest(targets[i]) :
-                    targets[i].live = 0
-                    targets[i].hit()
-                    targets[i].delete()
-          
-                       
+            for j in range(len(rectangles)):
+                for i in range(len(targets)):
+                    if b.hittest(targets[i]) :
+                        targets[i].live = 0
+                        targets[i].hit()
+                        targets[i].delete()
+              
+                           
 
+                        
+                       
+                        #b.live = 0
                     
-                   
-                    #b.live = 0
-                
-                #if t2.live == 0 and t1.live == 0:   
-                 #canv.itemconfig(screen1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
+                    #if t2.live == 0 and t1.live == 0:   
+                     #canv.itemconfig(screen1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
             
             
 
@@ -266,7 +313,11 @@ def new_game(event=''):
         for i in range(number_of_target):
             if targets[i].live > 0 :
                 targets[i].move()
-        
+
+
+        for i in range(len(rectangles)):
+            if rectangles[i].live > 0 :
+                rectangles[i].move()
 
         for i in range(number_of_target):
            life += targets[i].live
@@ -279,6 +330,9 @@ def new_game(event=''):
 
     for i in range(len(balls)):
             balls[i].delete()
+
+    for i in range(len(rectangles)):
+            rectangles[i].delete()
                 
     if life ==  0:   
         canv.itemconfig(screen1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
