@@ -22,7 +22,7 @@ class ball():
         """
         self.x = x
         self.y = y
-        self.r = 10
+        self.r = 15
         self.vx = 0
         self.vy = 0
         self.g = 1
@@ -204,6 +204,31 @@ class target():
     def delete(self):
         canv.coords(self.id, -10, -10, -10, -10)
 
+class Bomb():
+    def __init__(self):
+
+
+        self.new_bomb()
+    def new_bomb(self ):
+        self.x = rnd(10, 200)
+        self.y = rnd(10, 200)
+        self.id = canv.create_rectangle(self.x, self.y, self.x+10, self.y+15, fill= 'black')
+
+    def move(self):
+        if self.y < HEIGHT :
+            self.y += 2
+            self.set_coords()
+        else:
+            self.delete()
+    def set_coords(self):
+        canv.coords(self.id, self.x, self.y, self.x+10, self.y+15)
+
+    def delete(self):
+        canv.coords(self.id, -10, -10, -5, -5)
+
+
+
+
 
 class Rectangle:
     def __init__(self):
@@ -245,13 +270,21 @@ class Rectangle:
 
     def hit(self):
         canv.coords(self.id, -10, -10, -10, -10)
+
     def delete(self):
         canv.coords(self.id, -10, -5, -10, -5)
 
+    #def create_bomb(self):
+        #global bombs
+       # if self.x > 30 and self.x < 500:
+        #    bomb = Bomb()
+         #   bomb.new_bomb(self.x, self.y)
+
+    
 
 
 number_of_target = 4
-number_of_rectangle = 3
+number_of_rectangle = 1
 screen1 = canv.create_text(400, 300, text='', font='28')
 g1 = gun()
 
@@ -260,11 +293,21 @@ rectangles = [0]* number_of_rectangle
 
 
 def new_game(event=''):
-    global gun, life,  screen1, balls, bullet
+    global gun, life,  screen1, balls, bullet, bombs
     
     bullet = 0
     balls = []
     life = number_of_target
+    bombs = []*number_of_rectangle
+
+    for i in range(number_of_rectangle):
+
+        bomb = Bomb()
+        bombs += [bomb]
+        print('gh')
+
+
+# создаем цели
     for i in range(number_of_target):
         targets[i] = target() 
         targets[i].live = 1
@@ -273,7 +316,7 @@ def new_game(event=''):
         rectangles[i].live = 1 
         
     canv.itemconfig(screen1, text='')
-   
+# управление
     canv.bind('<Button-1>', g1.fire2_start)
     canv.bind('<ButtonRelease-1>', g1.fire2_end)
     canv.bind('<Motion>', g1.targeting)
@@ -284,6 +327,10 @@ def new_game(event=''):
 
     while life > 0 :
         life = 0
+       
+        for i in range(len(bombs)):
+
+            bombs[i].move()    
         for b in balls:
             b.move()
             for j in range(len(rectangles)):
@@ -303,6 +350,7 @@ def new_game(event=''):
                      #canv.itemconfig(screen1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
             
             
+        
 
         for i in range(len(balls)):
             print(balls[i].live)
@@ -313,11 +361,22 @@ def new_game(event=''):
         for i in range(number_of_target):
             if targets[i].live > 0 :
                 targets[i].move()
+                
+        for i in range(len(bombs)):
+            bombs[i].move()
+
 
 
         for i in range(len(rectangles)):
             if rectangles[i].live > 0 :
                 rectangles[i].move()
+                #if rectangles[i].x1 == 100 :
+                    #bomb = Bomb()
+                    #bombs += [bomb]
+                    #print('Gh')
+
+
+
 
         for i in range(number_of_target):
            life += targets[i].live
