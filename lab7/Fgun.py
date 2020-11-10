@@ -90,8 +90,9 @@ class ball():
     def hit_rectangle(self, obj):
         """  проверяет сталкивание с прямоугольником """
 
-    
-        if (obj.y1 > self.y)  and  (obj.x > self.x) and obj.x1 < self.x:
+
+        if (obj.y1 + obj.y > self.y )  and  self.y  > obj.y  and  (obj.x < self.x  ) and obj.x1 + obj.x > self.x  :
+
             return True
         else:
             return False
@@ -249,32 +250,30 @@ class Rectangle:
     def new_rectangle(self):
         x = self.x = rnd(50, 500)
         y = self.y = rnd (10, 100)
-        x1 = self.x1 = rnd(10, 500)
-        y1 = self.y1 = rnd (10, 100)
-        self.vx = rnd(-10, 10)
-        self.id = canv.create_rectangle(x, y, x1, y1, fill = 'black')
+        x1 = self.x1 = rnd(50, 70)
+        y1 = self.y1 = rnd (50, 70)
+        self.vx = 0
+        self.id = canv.create_rectangle(x, y, x+x1, y+y1, fill = 'black')
 
 
     def move(self):
-        if self.x > WIDTH or self.x1 > WIDTH :
+        if self.x + self.x1> WIDTH  :
             self.vx = -self.vx
             self.x += self.vx
-            self.x1 += 0.9 * self.vx
             self.set_coords()
 
 
-        if  self.x < 10 or self.x1 < 10 :
+        if  self.x  < 10   :
             self.vx = -self.vx
             self.x += self.vx
-            self.x1 += 0.9 * self.vx
             self.set_coords()
         else :
             self.x += self.vx
-            self.x1 += 0.9 * self.vx
+           
             self.set_coords()
 
     def set_coords(self):
-        canv.coords(self.id, self.x, self.y, self.x1, self.y1)
+        canv.coords(self.id, self.x, self.y, self.x+self.x1, self.y+self.y1)
 
     def hit(self):
         canv.coords(self.id, -10, -10, -10, -10)
