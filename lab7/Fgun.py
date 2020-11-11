@@ -4,6 +4,7 @@ import math
 import time
 
 
+
 WIDTH = 800
 HEIGHT = 600
 root = tk.Tk()
@@ -11,6 +12,7 @@ fr = tk.Frame(root)
 root.geometry('800x600')
 canv = tk.Canvas(root, bg='white')
 canv.pack(fill=tk.BOTH, expand=1)
+canv.focus_set()
 
 
 class ball():
@@ -36,14 +38,7 @@ class ball():
         )
         self.live = 100 # шарик показывается пока live > 0
 
-    def set_coords(self):
-        canv.coords(
-                self.id,
-                self.x - self.r,
-                self.y - self.r,
-                self.x + self.r,
-                self.y + self.r
-        )
+
 
     def move(self):
         """Переместить мяч по прошествии единицы времени.
@@ -71,6 +66,15 @@ class ball():
             self.x += self.vx
             self.y -= self.vy
             self.set_coords()
+
+    def set_coords(self):
+        canv.coords(
+                self.id,
+                self.x - self.r,
+                self.y - self.r,
+                self.x + self.r,
+                self.y + self.r
+        )
 
     def delete(self):
         canv.delete(self.id)
@@ -103,10 +107,26 @@ class gun():
         self.f2_power = 10
         self.f2_on = 0
         self.an = 1
-        self.id = canv.create_line(20,450,50,420,width=7) 
+        x = self.x = 10
+        y = self.y = 480
+        x1 = self.x1 = 30
+        y1 = self.y1 = 490
+        self.vx = 0
+        self.id = canv.create_line(x,y,x+x1,y+y1,width=7) 
 
     def fire2_start(self, event):
         self.f2_on = 1
+
+    def move_right(self,event):
+        self.x += 5
+        print('g')
+        canv.coords(self.id, self.x, self.y, self.x +self.x1,self.y+self.y1)
+
+
+    def move_left(self,event):
+        self.x -= 5
+
+        canv.coords(self.id, x, y, x +x1,y+y1)
 
     def fire2_end(self, event):
         """Выстрел мячом.
@@ -144,6 +164,54 @@ class gun():
             canv.itemconfig(self.id, fill='orange')
         else:
             canv.itemconfig(self.id, fill='black')
+
+class Rectangle:
+    def __init__(self):
+
+        self.live = 1
+        self.new_rectangle()
+
+
+
+    def new_rectangle(self):
+        x = self.x = rnd(50, 500)
+        y = self.y = rnd (10, 100)
+        x1 = self.x1 = rnd(50, 70)
+        y1 = self.y1 = rnd (50, 70)
+        self.vx = 10
+        self.id = canv.create_rectangle(x, y, x+x1, y+y1, fill = 'black')
+
+
+    def move(self):
+        if self.x + self.x1> WIDTH  :
+            self.vx = -self.vx
+            self.x += self.vx
+            self.set_coords()
+
+
+        if  self.x  < 10   :
+            self.vx = -self.vx
+            self.x += self.vx
+            self.set_coords()
+        else :
+            self.x += self.vx
+           
+            self.set_coords()
+
+    def set_coords(self):
+        canv.coords(self.id, self.x, self.y, self.x+self.x1, self.y+self.y1)
+
+    def hit(self):
+        canv.coords(self.id, -10, -10, -10, -10)
+
+    def delete(self):
+        canv.coords(self.id, -10, -5, -10, -5)
+
+    def create_bomb(self, event):
+        global bombs
+        bomb = Bomb(self.x, self.y)
+        bombs += [bomb]
+        print ('k')
 
 
 class target():
@@ -214,13 +282,13 @@ class target():
         canv.coords(self.id, -10, -10, -10, -10)
 
 class Bomb():
-    def __init__(self):
-
+    def __init__(self, x: Rectangle, y: Rectangle):
+        self.x = x
+        self.y = y
 
         self.new_bomb()
     def new_bomb(self ):
-        self.x = rnd(10, 500)
-        self.y = rnd(10, 200)
+
         self.id = canv.create_rectangle(self.x, self.y, self.x+10, self.y+15, fill= 'black')
 
     def move(self):
@@ -239,53 +307,6 @@ class Bomb():
 
 
 
-class Rectangle:
-    def __init__(self):
-
-        self.live = 1
-        self.new_rectangle()
-
-
-
-    def new_rectangle(self):
-        x = self.x = rnd(50, 500)
-        y = self.y = rnd (10, 100)
-        x1 = self.x1 = rnd(50, 70)
-        y1 = self.y1 = rnd (50, 70)
-        self.vx = 0
-        self.id = canv.create_rectangle(x, y, x+x1, y+y1, fill = 'black')
-
-
-    def move(self):
-        if self.x + self.x1> WIDTH  :
-            self.vx = -self.vx
-            self.x += self.vx
-            self.set_coords()
-
-
-        if  self.x  < 10   :
-            self.vx = -self.vx
-            self.x += self.vx
-            self.set_coords()
-        else :
-            self.x += self.vx
-           
-            self.set_coords()
-
-    def set_coords(self):
-        canv.coords(self.id, self.x, self.y, self.x+self.x1, self.y+self.y1)
-
-    def hit(self):
-        canv.coords(self.id, -10, -10, -10, -10)
-
-    def delete(self):
-        canv.coords(self.id, -10, -5, -10, -5)
-
-    #def create_bomb(self):
-        #global bombs
-       # if self.x > 30 and self.x < 500:
-        #    bomb = Bomb()
-         #   bomb.new_bomb(self.x, self.y)
 
     
 
@@ -308,10 +329,10 @@ def new_game(event=''):
     life = number_of_target
     bombs = []*number_of_rectangle
 
-    for i in range(number_of_bomb):
+    #for i in range(number_of_bomb):
 
-        bomb = Bomb()
-        bombs += [bomb]
+       # bomb = Bomb()
+        #bombs += [bomb]
       
 
 
@@ -326,8 +347,12 @@ def new_game(event=''):
     canv.itemconfig(screen1, text='')
 # управление
     canv.bind('<Button-1>', g1.fire2_start)
+    #canv.bind('<Button-1>', g1.move_right)
     canv.bind('<ButtonRelease-1>', g1.fire2_end)
     canv.bind('<Motion>', g1.targeting)
+    canv.bind('<Left>', rectangles[0].create_bomb)
+    
+
 
     z = 0.03
     
